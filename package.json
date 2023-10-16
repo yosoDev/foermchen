@@ -1,0 +1,44 @@
+{
+  "name": "foermchen",
+  "version": "1.0.0-dev.1",
+  "description": "Förmchen is a form builder for Quasar",
+  "productName": "Förmchen",
+  "author": "yosoDev <27620248+yosoDev@users.noreply.github.com>",
+  "private": true,
+  "scripts": {
+    "lint": "eslint --ext .js,.ts,.vue ./",
+    "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
+    "code:fix": "npm run format && npm run lint",
+    "dev": "quasar dev",
+    "build": "quasar build"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.16.4",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "marked": "^9.1.2",
+    "pinia": "^2.0.11",
+    "quasar": "^2.6.0",
+    "reflect-metadata": "^0.1.13",
+    "vue": "^3.0.0",
+    "vue-i18n": "^9.2.2",
+    "vue-router": "^4.0.0"
+  },
+  "devDependencies": {
+    "@intlify/vite-plugin-vue-i18n": "^3.3.1",
+    "@quasar/app-vite": "^1.3.0",
+    "@types/node": "^12.20.21",
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
+    "autoprefixer": "^10.4.2",
+    "eslint": "^8.10.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-vue": "^9.0.0",
+    "prettier": "^2.5.1",
+    "typescript": "^4.5.4"
+  },
+  "engines": {
+    "node": "^18",
+    "npm": ">= 9"
+  }
+}
