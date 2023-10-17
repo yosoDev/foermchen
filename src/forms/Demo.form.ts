@@ -1,6 +1,14 @@
-import { IsString, MinLength } from 'class-validator'
+import { MinLength } from 'class-validator'
 
-import { AbstractForm, Form, FormLayout, TextField } from 'foermchen'
+import {
+  AbstractForm,
+  DateField,
+  DateTimeField,
+  Form,
+  FormLayout,
+  TextField,
+  TimeField,
+} from 'foermchen'
 
 @Form({
   layout: FormLayout.Rows,
@@ -8,9 +16,17 @@ import { AbstractForm, Form, FormLayout, TextField } from 'foermchen'
 })
 class DemoForm extends AbstractForm {
   @TextField({ clearable: true })
-  @IsString()
   @MinLength(3)
   username: string
+
+  @DateField({})
+  birthday: string
+
+  @TimeField({})
+  eventTime: string
+
+  @DateTimeField({})
+  startDate: string
 }
 
 export { DemoForm }

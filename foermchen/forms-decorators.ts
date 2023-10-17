@@ -14,9 +14,19 @@ import {
   ToggleTypes,
   UserFieldConfig,
 } from 'foermchen'
+import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator'
+import { IsDateString, IsTimeString } from 'foermchen/contraints'
 
 export function TextField(config: UserFieldConfig<FieldTypes.Text>) {
   return function (target: object, propertyName: string) {
+    if (config.defaultConstraints !== false) {
+      IsString()(target, propertyName)
+    }
+
+    if (config.required) {
+      IsNotEmpty()(target, propertyName)
+    }
+
     const { type, clearable, ...configRest } = config
 
     const _config = {
@@ -37,6 +47,10 @@ export function TextField(config: UserFieldConfig<FieldTypes.Text>) {
 
 export function NumberField(config: UserFieldConfig<FieldTypes.Number>) {
   return function (target: object, propertyName: string) {
+    if (config.defaultConstraints !== false) {
+      IsNumber()(target, propertyName)
+    }
+
     const { type, ...configRest } = config
 
     const _config = {
@@ -56,6 +70,10 @@ export function NumberField(config: UserFieldConfig<FieldTypes.Number>) {
 
 export function ToggleField(config: UserFieldConfig<FieldTypes.Toggle>) {
   return function (target: object, propertyName: string) {
+    if (config.defaultConstraints !== false) {
+      IsBoolean()(target, propertyName)
+    }
+
     const { type, ...configRest } = config
 
     const _config = {
@@ -75,6 +93,14 @@ export function ToggleField(config: UserFieldConfig<FieldTypes.Toggle>) {
 
 export function DateField(config: UserFieldConfig<FieldTypes.Date>) {
   return function (target: object, propertyName: string) {
+    if (config.defaultConstraints !== false) {
+      IsString()(target, propertyName)
+      IsDateString({ message: '$property is not a valid date' })(
+        target,
+        propertyName,
+      )
+    }
+
     const { todayBtn, ...configRest } = config
 
     const _config = {
@@ -94,6 +120,14 @@ export function DateField(config: UserFieldConfig<FieldTypes.Date>) {
 
 export function TimeField(config: UserFieldConfig<FieldTypes.Time>) {
   return function (target: object, propertyName: string) {
+    if (config.defaultConstraints !== false) {
+      IsString()(target, propertyName)
+      IsTimeString({ message: '$property is not a valid time' })(
+        target,
+        propertyName,
+      )
+    }
+
     const { format24h, nowBtn, ...configRest } = config
 
     const _config = {
@@ -114,6 +148,10 @@ export function TimeField(config: UserFieldConfig<FieldTypes.Time>) {
 
 export function DateTimeField(config: UserFieldConfig<FieldTypes.DateTime>) {
   return function (target: object, propertyName: string) {
+    if (config.defaultConstraints !== false) {
+      IsString()(target, propertyName)
+    }
+
     const { todayBtn, nowBtn, format24h, ...configRest } = config
 
     const _config = {

@@ -11,7 +11,6 @@ Förmchen is a form builder for Quasar
 >
 > My current list of todos can be found further down.
 
-
 ## Install the dependencies
 
 ```bash
@@ -37,11 +36,12 @@ $ npm run format
 $ npm run code:fix
 ```
 
-
 ## Using Förmchen
+
 First, we'll need a form class.
 The class can be named anything, but needs to extend `AbstractForm` and has to have the `@Form` decorator.
 This class should be exported from a file outside any vue component to prevent issues with usage of decorators and Vite.
+
 ```ts
 @Form({
   layout: FormLayout.Rows,
@@ -59,17 +59,20 @@ The field decorators can be used to register class properties as form fields.
 Validation can be added with any decorator from `class-validator`.
 
 Once a class is created, it can be used to create an instance of `Foermchen`:
+
 ```ts
 const demoForm = new Foermchen(DemoForm)
 ```
 
 This instance can be passed to the `FoermchenRenderer` component, which will render the form:
+
 ```vue
 <foermchen-renderer :form="demoForm" />
 ```
 
 Förmchen needs some metadata objects to be registered.
 Ideally this is done in a quasar boot file:
+
 ```ts
 // src/boot/formMetaData.ts
 import { boot } from 'quasar/wrappers'
@@ -82,38 +85,38 @@ export default boot(() => {
 ```
 
 The `tsconfig.json` should contain these value:
+
 ```json5
 {
   // ...
-  "compilerOptions": {
+  compilerOptions: {
     // ...
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "strictNullChecks": false,
-    "paths": {
-      "foermchen/*": ["foermchen/*"]
-    }
-  }
+    emitDecoratorMetadata: true,
+    experimentalDecorators: true,
+    strictNullChecks: false,
+    paths: {
+      'foermchen/*': ['foermchen/*'],
+    },
+  },
 }
 ```
 
 The custom path is optional, but makes imports a little cleaner.
 If the custom path is used, it also needs to registered with Vite.
 This can be done in `quasar.config.js`:
+
 ```js
 {
   // ...
   extendViteConf(viteConf)
   {
-    viteConf.resolve.alias.foermchen = path.resolve(
-      __dirname,
-      './foermchen',
-    )
+    viteConf.resolve.alias.foermchen = path.resolve(__dirname, './foermchen')
   }
 }
 ```
 
 The following ESLint rules are recommended when using Förmchen:
+
 ```json
 {
   "@typescript-eslint/interface-name-prefix": "off",
@@ -121,8 +124,8 @@ The following ESLint rules are recommended when using Förmchen:
 }
 ```
 
-
 ## Todos
+
 > [!NOTE]
 > This todo list is not complete and might change quite a lot.
 

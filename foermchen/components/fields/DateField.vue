@@ -29,10 +29,8 @@ const disabled = computed(() =>
     <q-input
       v-model="formDataRef[field.fieldName]"
       filled
-      mask="date"
       :error="!!formErrorRef[field.fieldName]"
       :error-message="(formErrorRef[field.fieldName] ? formErrorRef[field.fieldName] : '') as string"
-      :rules="['date']"
       :disable="disabled"
       :readonly="field.config.readonly"
       outlined
@@ -49,6 +47,7 @@ const disabled = computed(() =>
               :today-btn="field.config.todayBtn"
               :disable="disabled"
               :readonly="field.config.readonly"
+              mask="YYYY-MM-DD"
             >
               <div class="row items-center justify-end">
                 <q-btn v-close-popup label="Close" color="primary" flat />

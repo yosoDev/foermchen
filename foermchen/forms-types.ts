@@ -21,6 +21,8 @@ type CommonFieldConfig<FT extends FieldTypes> = {
   default?: FieldTypeDefaults[FT]
   readonly?: boolean
   disabled?: boolean | string
+  defaultConstraints?: boolean
+  required?: boolean
 }
 
 export type SelectValue = { value: string; label: string }

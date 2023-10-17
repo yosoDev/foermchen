@@ -1,4 +1,5 @@
 export * as components from './components'
+export * as constraints from './contraints'
 export * from './components/fields/common/field-helpers'
 export * from './forms-classes'
 export * from './forms-decorators'
