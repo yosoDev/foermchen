@@ -28,11 +28,12 @@ const disabled = computed(() =>
   <div style="max-width: 300px">
     <q-input
       v-model="formDataRef[field.fieldName]"
-      filled
       :error="!!formErrorRef[field.fieldName]"
       :error-message="(formErrorRef[field.fieldName] ? formErrorRef[field.fieldName] : '') as string"
       :disable="disabled"
       :readonly="field.config.readonly"
+      type="date"
+      filled
       outlined
       @update:model-value="form.validateField(field.fieldName)"
       @blur="form.validateField(field.fieldName)"

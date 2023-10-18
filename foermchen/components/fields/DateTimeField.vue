@@ -32,6 +32,7 @@ const disabled = computed(() =>
       :error-message="(formErrorRef[field.fieldName] ? formErrorRef[field.fieldName] : '') as string"
       :disable="disabled"
       :readonly="field.config.readonly"
+      type="datetime-local"
       filled
       @update:model-value="form.validateField(field.fieldName)"
       @blur="form.validateField(field.fieldName)"
@@ -46,7 +47,7 @@ const disabled = computed(() =>
               :today-btn="field.config.todayBtn"
               :disable="disabled"
               :readonly="field.config.readonly"
-              mask="YYYY-MM-DD HH:mm"
+              mask="YYYY-MM-DDTHH:mm"
             >
               <div class="row items-center justify-end">
                 <q-btn v-close-popup label="Close" color="primary" flat />
