@@ -151,3 +151,10 @@ The following ESLint rules are recommended when using Förmchen:
   - Setting for the entire form which controls the input style (dense, outlined, ...)
 - [ ] Fix form styling
   - Clearances are weird in some cases, e.g. when errors or hints are displayed
+- [ ] Hidden fields
+- [ ] Improve date, time, and datetime fields
+  - These fields should display values in a localized form
+  - Native HTML input types can't be used as they come with their own date pickers
+  - Inputs should be readonly, but with regular styling
+    - Picker opens on focus / click
+  - Is there a way to combine date and time pickers in the datetime field?
