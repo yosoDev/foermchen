@@ -8,6 +8,7 @@ import {
   Form,
   FormLayout,
   MultiSelectField,
+  NumberField,
   SelectField,
   TextField,
   TimeField,
@@ -21,6 +22,9 @@ class DemoForm extends AbstractForm {
   @TextField({ clearable: true })
   @MinLength(3)
   username: string
+
+  @NumberField({ min: 0, max: 9 })
+  favouriteNumber: number
 
   @DateField({})
   birthday: string

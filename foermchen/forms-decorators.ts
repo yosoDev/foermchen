@@ -21,6 +21,8 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  Max,
+  Min,
 } from 'class-validator'
 import { IsDateString, IsTimeString } from 'foermchen/contraints'
 
@@ -56,6 +58,14 @@ export function NumberField(config: UserFieldConfig<FieldTypes.Number>) {
   return function (target: object, propertyName: string) {
     if (config.defaultConstraints !== false) {
       IsNumber()(target, propertyName)
+
+      if (typeof config.min === 'number') {
+        Min(config.min)(target, propertyName)
+      }
+
+      if (typeof config.max === 'number') {
+        Max(config.max)(target, propertyName)
+      }
     }
 
     const { type, ...configRest } = config

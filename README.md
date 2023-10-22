@@ -160,3 +160,4 @@ The following ESLint rules are recommended when using Förmchen:
   - Is there a way to combine date and time pickers in the datetime field?
 - [ ] Allow injection of errors (e.g. from server-side validation)
   - theoretically possible via `Foermchen.handleErrors()`, but passing a simple error structure is preferred
+- [ ] Validate step for number fields

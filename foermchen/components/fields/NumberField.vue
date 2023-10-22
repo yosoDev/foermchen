@@ -7,6 +7,7 @@ import {
   FormFieldConfig,
   isFieldDisabled,
   Foermchen,
+  NumberTypes,
 } from 'foermchen'
 
 interface NumberFieldProps {
