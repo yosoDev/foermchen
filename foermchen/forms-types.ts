@@ -15,7 +15,7 @@ export enum FieldTypes {
   Info = 'info',
 }
 
-type CommonFieldConfig<FT extends FieldTypes> = {
+export type CommonFieldConfig<FT extends FieldTypes> = {
   label?: string
   hint?: string
   default?: FieldTypeDefaults[FT]

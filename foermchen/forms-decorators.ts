@@ -14,6 +14,7 @@ import {
   ToggleTypes,
   UserFieldConfig,
   getTranslator,
+  CommonFieldConfig,
 } from 'foermchen'
 import {
   IsBoolean,
@@ -25,17 +26,96 @@ import {
   Max,
   Min,
   ValidationArguments,
+  ValidationOptions,
 } from 'class-validator'
 import { IsDateString, IsTimeString } from 'foermchen/contraints'
+
+function defaultTranslator(
+  key: string,
+  label: string,
+  params: { [key: string]: string | number } = {},
+): (validationArguments: ValidationArguments) => string {
+  const translate = getTranslator()
+
+  return (args: ValidationArguments) =>
+    translate(key, {
+      label,
+      value: args.value,
+      ...params,
+    })
+}
+
+function defaultValidationOptions<FC extends CommonFieldConfig<any>>(
+  translationKey: string,
+  config: FC,
+  propertyName: string,
+  params: { [key: string]: string | number } = {},
+): ValidationOptions {
+  return {
+    message: defaultTranslator(
+      translationKey,
+      config.label ?? propertyName,
+      params,
+    ),
+  }
+}
+
+function typeValidationOptions<FC extends CommonFieldConfig<any>>(
+  type: 'string' | 'number' | 'boolean',
+  config: FC,
+  propertyName: string,
+): ValidationOptions {
+  return defaultValidationOptions(
+    `foermchen.errors.types.${type}`,
+    config,
+    propertyName,
+  )
+}
+
+function registerStringValidator<FC extends CommonFieldConfig<any>>(
+  target: object,
+  propertyName: string,
+  config: FC,
+) {
+  IsString(typeValidationOptions('string', config, propertyName))(
+    target,
+    propertyName,
+  )
+}
+
+function registerNumberValidator<FC extends CommonFieldConfig<any>>(
+  target: object,
+  propertyName: string,
+  config: FC,
+) {
+  IsNumber(undefined, typeValidationOptions('number', config, propertyName))(
+    target,
+    propertyName,
+  )
+}
+
+function registerNotEmptyValidator<FC extends CommonFieldConfig<any>>(
+  target: object,
+  propertyName: string,
+  config: FC,
+) {
+  IsNotEmpty(
+    defaultValidationOptions(
+      'foermchen.errors.generic.notEmpty',
+      config,
+      propertyName,
+    ),
+  )(target, propertyName)
+}
 
 export function TextField(config: UserFieldConfig<FieldTypes.Text>) {
   return function (target: object, propertyName: string) {
     if (config.defaultConstraints !== false) {
-      IsString()(target, propertyName)
+      registerStringValidator(target, propertyName, config)
     }
 
     if (config.required) {
-      IsNotEmpty()(target, propertyName)
+      registerNotEmptyValidator(target, propertyName, config)
     }
 
     const { type, clearable, ...configRest } = config
@@ -58,29 +138,31 @@ export function TextField(config: UserFieldConfig<FieldTypes.Text>) {
 
 export function NumberField(config: UserFieldConfig<FieldTypes.Number>) {
   return function (target: object, propertyName: string) {
-    const translate = getTranslator()
-
     if (config.defaultConstraints !== false) {
-      IsNumber(undefined, {
-        message: translate('foermchen.errors.types.number', {
-          label: config.label ?? propertyName,
-          value: '$value',
-        }),
-      })(target, propertyName)
+      registerNumberValidator(target, propertyName, config)
 
       if (typeof config.min === 'number') {
-        Min(config.min, {
-          message: (args: ValidationArguments) =>
-            translate('foermchen.errors.numbers.min', {
-              label: config.label ?? propertyName,
-              min: config.min,
-              value: args.value,
-            }),
-        })(target, propertyName)
+        Min(
+          config.min,
+          defaultValidationOptions(
+            'foermchen.errors.numbers.min',
+            config,
+            propertyName,
+            { min: config.min },
+          ),
+        )(target, propertyName)
       }
 
       if (typeof config.max === 'number') {
-        Max(config.max)(target, propertyName)
+        Max(
+          config.max,
+          defaultValidationOptions(
+            'foermchen.errors.numbers.max',
+            config,
+            propertyName,
+            { min: config.max },
+          ),
+        )(target, propertyName)
       }
     }
 
@@ -104,7 +186,10 @@ export function NumberField(config: UserFieldConfig<FieldTypes.Number>) {
 export function ToggleField(config: UserFieldConfig<FieldTypes.Toggle>) {
   return function (target: object, propertyName: string) {
     if (config.defaultConstraints !== false) {
-      IsBoolean()(target, propertyName)
+      IsBoolean(typeValidationOptions('boolean', config, propertyName))(
+        target,
+        propertyName,
+      )
     }
 
     const { type, ...configRest } = config
@@ -127,7 +212,8 @@ export function ToggleField(config: UserFieldConfig<FieldTypes.Toggle>) {
 export function DateField(config: UserFieldConfig<FieldTypes.Date>) {
   return function (target: object, propertyName: string) {
     if (config.defaultConstraints !== false) {
-      IsString()(target, propertyName)
+      registerStringValidator(target, propertyName, config)
+
       IsDateString({ message: '$property is not a valid date' })(
         target,
         propertyName,
@@ -154,7 +240,8 @@ export function DateField(config: UserFieldConfig<FieldTypes.Date>) {
 export function TimeField(config: UserFieldConfig<FieldTypes.Time>) {
   return function (target: object, propertyName: string) {
     if (config.defaultConstraints !== false) {
-      IsString()(target, propertyName)
+      registerStringValidator(target, propertyName, config)
+
       IsTimeString({ message: '$property is not a valid time' })(
         target,
         propertyName,
@@ -182,7 +269,7 @@ export function TimeField(config: UserFieldConfig<FieldTypes.Time>) {
 export function DateTimeField(config: UserFieldConfig<FieldTypes.DateTime>) {
   return function (target: object, propertyName: string) {
     if (config.defaultConstraints !== false) {
-      IsString()(target, propertyName)
+      registerStringValidator(target, propertyName, config)
     }
 
     const { todayBtn, nowBtn, format24h, ...configRest } = config
@@ -207,7 +294,8 @@ export function DateTimeField(config: UserFieldConfig<FieldTypes.DateTime>) {
 export function ColorField(config: UserFieldConfig<FieldTypes.Color>) {
   return function (target: object, propertyName: string) {
     if (config.defaultConstraints !== false) {
-      IsString()(target, propertyName)
+      registerStringValidator(target, propertyName, config)
+
       IsHexColor()(target, propertyName)
     }
 
@@ -231,7 +319,7 @@ export function ColorField(config: UserFieldConfig<FieldTypes.Color>) {
 export function SelectField(config: UserFieldConfig<FieldTypes.Select>) {
   return function (target: object, propertyName: string) {
     if (config.defaultConstraints !== false) {
-      IsString()(target, propertyName)
+      registerStringValidator(target, propertyName, config)
 
       const values = unref(config.options).map(({ value }) => value)
       IsIn(values)(target, propertyName)
@@ -260,7 +348,7 @@ export function MultiSelectField(
 ) {
   return function (target: object, propertyName: string) {
     if (config.defaultConstraints !== false) {
-      IsString({ each: true })(target, propertyName)
+      registerStringValidator(target, propertyName, config)
 
       const values = unref(config.options).map(({ value }) => value)
       IsIn(values, { each: true })(target, propertyName)
