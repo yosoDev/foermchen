@@ -241,16 +241,14 @@ export type FormLayoutConfigMapping = {
   [FormLayout.Groups]: GroupLayoutConfig
 }
 
-export type FormLayoutConfig<FL extends FormLayout> = {
+export type FormDecoratorConfig<FL extends FormLayout> = {
   layout: FL
   layoutConfig: FormLayoutConfigMapping[FL]
 }
 
 export type FormMetaData<FL extends FormLayout> = {
   formConstructor: object
-  layout: FL
-  layoutConfig: FormLayoutConfigMapping[FL]
-}
+} & FormDecoratorConfig<FL>
 
 export type FieldMetaData<FT extends FieldTypes> = {
   formConstructor: object
@@ -258,3 +256,8 @@ export type FieldMetaData<FT extends FieldTypes> = {
   type: FT
   config: FieldConfig<FT>
 }
+
+export type Translator = (
+  translation: string,
+  params: { [key: string]: string | number },
+) => string

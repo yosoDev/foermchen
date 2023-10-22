@@ -23,7 +23,7 @@ class DemoForm extends AbstractForm {
   @MinLength(3)
   username: string
 
-  @NumberField({ min: 0, max: 9 })
+  @NumberField({ min: 0, max: 9, default: -11, label: 'Favourite number' })
   favouriteNumber: number
 
   @DateField({})

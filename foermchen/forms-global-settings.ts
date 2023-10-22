@@ -4,6 +4,7 @@ import {
   FieldTypes,
   FormLayout,
   FormMetaData,
+  Translator,
 } from 'foermchen'
 
 export class FormMetaDataStorage {
@@ -103,4 +104,24 @@ export function setupMetaDataStorage() {
     // @ts-ignore
     global.formMetaDataStorage = new FormMetaDataStorage()
   }
+}
+
+export function setupTranslator(translator?: Translator) {
+  const global = getGlobal()
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (!global.foermchenTranslator) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    global.foermchenTranslator = translator
+  }
+}
+
+export function getTranslator() {
+  const global = getGlobal()
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return global.foermchenTranslator ?? ((key: string) => key)
 }

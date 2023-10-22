@@ -5,7 +5,7 @@ import {
   getFieldMetaDataStorage,
   getFormMetaDataStorage,
   FieldTypes,
-  FormLayoutConfig,
+  FormDecoratorConfig,
   FormLayout,
   MultiSelectTypes,
   NumberTypes,
@@ -13,6 +13,7 @@ import {
   TextTypes,
   ToggleTypes,
   UserFieldConfig,
+  getTranslator,
 } from 'foermchen'
 import {
   IsBoolean,
@@ -23,6 +24,7 @@ import {
   IsString,
   Max,
   Min,
+  ValidationArguments,
 } from 'class-validator'
 import { IsDateString, IsTimeString } from 'foermchen/contraints'
 
@@ -56,11 +58,25 @@ export function TextField(config: UserFieldConfig<FieldTypes.Text>) {
 
 export function NumberField(config: UserFieldConfig<FieldTypes.Number>) {
   return function (target: object, propertyName: string) {
+    const translate = getTranslator()
+
     if (config.defaultConstraints !== false) {
-      IsNumber()(target, propertyName)
+      IsNumber(undefined, {
+        message: translate('foermchen.errors.types.number', {
+          label: config.label ?? propertyName,
+          value: '$value',
+        }),
+      })(target, propertyName)
 
       if (typeof config.min === 'number') {
-        Min(config.min)(target, propertyName)
+        Min(config.min, {
+          message: (args: ValidationArguments) =>
+            translate('foermchen.errors.numbers.min', {
+              label: config.label ?? propertyName,
+              min: config.min,
+              value: args.value,
+            }),
+        })(target, propertyName)
       }
 
       if (typeof config.max === 'number') {
@@ -319,7 +335,7 @@ export function InfoField(config: UserFieldConfig<FieldTypes.Info>) {
   }
 }
 
-export function Form<FL extends FormLayout>(config: FormLayoutConfig<FL>) {
+export function Form<FL extends FormLayout>(config: FormDecoratorConfig<FL>) {
   return function (target: new () => AbstractForm) {
     if (!(target.prototype instanceof AbstractForm)) {
       throw new Error(`Class "${target.name}" is not extending "AbstractForm"`)

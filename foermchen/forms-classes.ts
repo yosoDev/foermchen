@@ -10,7 +10,7 @@ import {
   FormDataRef,
   FormErrorRef,
   FormFieldConfig,
-  FormLayoutConfig,
+  FormDecoratorConfig,
 } from 'foermchen'
 
 export abstract class AbstractForm {}
@@ -168,7 +168,7 @@ export class Foermchen<F extends AbstractForm> {
     }
   }
 
-  public getFormLayout(): FormLayoutConfig<any> {
+  public getFormLayout(): FormDecoratorConfig<any> {
     return {
       layout: this.getFormMetaData().layout,
       layoutConfig: this.getFormMetaData().layoutConfig,

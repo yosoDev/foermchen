@@ -74,7 +74,7 @@ Förmchen needs some metadata objects to be registered.
 Ideally this is done in a quasar boot file:
 
 ```ts
-// src/boot/formMetaData.ts
+// src/boot/foermchen.ts
 import { boot } from 'quasar/wrappers'
 
 import { setupMetaDataStorage } from 'foermchen'
@@ -124,6 +124,24 @@ The following ESLint rules are recommended when using Förmchen:
 }
 ```
 
+## Translations
+
+Förmchen currently does not provide default translations.
+Instead, a custom translator compatible with the following function signature has to be passed:
+
+```ts
+type Translator = (
+  translation: string,
+  params: { [key: string]: string | number },
+) => string
+```
+
+If no translator is set, the translation keys will be used without translations.
+
+The following translation keys are used (available params in brackets):
+
+- todo
+
 ## Todos
 
 > [!NOTE]
@@ -132,8 +150,9 @@ The following ESLint rules are recommended when using Förmchen:
 - [ ] Publish as package
 - [ ] Create Quasar extension
 - [ ] Translations
-  - [ ] Default translations
-  - [ ] Support for external translation functions
+  - [x] ~~Default translations~~ (for now only external translations)
+  - [x] Support for external translation functions
+  - [ ] Translation keys and formatting params for all default translations
 - [x] Ease use of validation decorators
   - [x] Maybe add basic decorators like `IsString` and `IsNumber` to their respective field type decorator
 - [ ] Custom validators
