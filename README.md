@@ -134,8 +134,8 @@ The following ESLint rules are recommended when using Förmchen:
 - [ ] Translations
   - [ ] Default translations
   - [ ] Support for external translation functions
-- [ ] Ease use of validation decorators
-  - [ ] Maybe add basic decorators like `IsString` and `IsNumber` to their respective field type decorator
+- [x] Ease use of validation decorators
+  - [x] Maybe add basic decorators like `IsString` and `IsNumber` to their respective field type decorator
 - [ ] Custom validators
 - [ ] Field type that can display arbitrary and reactive components
   - Maybe slot with form data as slot props
@@ -158,3 +158,5 @@ The following ESLint rules are recommended when using Förmchen:
   - Inputs should be readonly, but with regular styling
     - Picker opens on focus / click
   - Is there a way to combine date and time pickers in the datetime field?
+- [ ] Allow injection of errors (e.g. from server-side validation)
+  - theoretically possible via `Foermchen.handleErrors()`, but passing a simple error structure is preferred
