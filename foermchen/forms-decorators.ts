@@ -1,4 +1,4 @@
-import { toRef } from 'vue'
+import { toRef, unref } from 'vue'
 
 import {
   AbstractForm,
@@ -14,7 +14,14 @@ import {
   ToggleTypes,
   UserFieldConfig,
 } from 'foermchen'
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator'
+import {
+  IsBoolean,
+  IsHexColor,
+  IsIn,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator'
 import { IsDateString, IsTimeString } from 'foermchen/contraints'
 
 export function TextField(config: UserFieldConfig<FieldTypes.Text>) {
@@ -173,6 +180,11 @@ export function DateTimeField(config: UserFieldConfig<FieldTypes.DateTime>) {
 
 export function ColorField(config: UserFieldConfig<FieldTypes.Color>) {
   return function (target: object, propertyName: string) {
+    if (config.defaultConstraints !== false) {
+      IsString()(target, propertyName)
+      IsHexColor()(target, propertyName)
+    }
+
     const { useInput, ...configRest } = config
 
     const _config = {
@@ -192,6 +204,13 @@ export function ColorField(config: UserFieldConfig<FieldTypes.Color>) {
 
 export function SelectField(config: UserFieldConfig<FieldTypes.Select>) {
   return function (target: object, propertyName: string) {
+    if (config.defaultConstraints !== false) {
+      IsString()(target, propertyName)
+
+      const values = unref(config.options).map(({ value }) => value)
+      IsIn(values)(target, propertyName)
+    }
+
     const { type, options, ...configRest } = config
 
     const _config = {
@@ -214,6 +233,13 @@ export function MultiSelectField(
   config: UserFieldConfig<FieldTypes.MultiSelect>,
 ) {
   return function (target: object, propertyName: string) {
+    if (config.defaultConstraints !== false) {
+      IsString({ each: true })(target, propertyName)
+
+      const values = unref(config.options).map(({ value }) => value)
+      IsIn(values, { each: true })(target, propertyName)
+    }
+
     const { type, options, ...configRest } = config
 
     const _config = {

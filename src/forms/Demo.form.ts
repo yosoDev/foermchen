@@ -2,10 +2,13 @@ import { MinLength } from 'class-validator'
 
 import {
   AbstractForm,
+  ColorField,
   DateField,
   DateTimeField,
   Form,
   FormLayout,
+  MultiSelectField,
+  SelectField,
   TextField,
   TimeField,
 } from 'foermchen'
@@ -27,6 +30,25 @@ class DemoForm extends AbstractForm {
 
   @DateTimeField({})
   startDate: string
+
+  @ColorField({})
+  favouriteColor: string
+
+  @SelectField({
+    options: [
+      { value: 'a', label: 'A' },
+      { value: 'b', label: 'B' },
+    ],
+  })
+  select: string
+
+  @MultiSelectField({
+    options: [
+      { value: 'a', label: 'A' },
+      { value: 'b', label: 'B' },
+    ],
+  })
+  multiSelect: string[]
 }
 
 export { DemoForm }
