@@ -43,6 +43,7 @@ const disabled = computed(() =>
           <q-popup-proxy cover transition-show="scale" transition-hide="scale">
             <q-color
               v-model="formDataRef[field.fieldName]"
+              format-model="hex"
               :disable="disabled"
               :readonly="field.config.readonly"
             />
