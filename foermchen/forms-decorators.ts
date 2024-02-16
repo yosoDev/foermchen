@@ -50,6 +50,7 @@ function defaultValidationOptions<FC extends CommonFieldConfig<any>>(
   config: FC,
   propertyName: string,
   params: { [key: string]: string | number } = {},
+  isArray = false,
 ): ValidationOptions {
   return {
     message: defaultTranslator(
@@ -57,6 +58,7 @@ function defaultValidationOptions<FC extends CommonFieldConfig<any>>(
       config.label ?? propertyName,
       params,
     ),
+    each: isArray,
   }
 }
 
@@ -64,11 +66,14 @@ function typeValidationOptions<FC extends CommonFieldConfig<any>>(
   type: 'string' | 'number' | 'boolean',
   config: FC,
   propertyName: string,
+  isArray = false,
 ): ValidationOptions {
   return defaultValidationOptions(
     `foermchen.errors.types.${type}`,
     config,
     propertyName,
+    {},
+    isArray,
   )
 }
 
@@ -76,8 +81,9 @@ function registerStringValidator<FC extends CommonFieldConfig<any>>(
   target: object,
   propertyName: string,
   config: FC,
+  isArray = false,
 ) {
-  IsString(typeValidationOptions('string', config, propertyName))(
+  IsString(typeValidationOptions('string', config, propertyName, isArray))(
     target,
     propertyName,
   )
@@ -87,23 +93,27 @@ function registerNumberValidator<FC extends CommonFieldConfig<any>>(
   target: object,
   propertyName: string,
   config: FC,
+  isArray = false,
 ) {
-  IsNumber(undefined, typeValidationOptions('number', config, propertyName))(
-    target,
-    propertyName,
-  )
+  IsNumber(
+    undefined,
+    typeValidationOptions('number', config, propertyName, isArray),
+  )(target, propertyName)
 }
 
 function registerNotEmptyValidator<FC extends CommonFieldConfig<any>>(
   target: object,
   propertyName: string,
   config: FC,
+  isArray = false,
 ) {
   IsNotEmpty(
     defaultValidationOptions(
       'foermchen.errors.generic.notEmpty',
       config,
       propertyName,
+      {},
+      isArray,
     ),
   )(target, propertyName)
 }
@@ -348,7 +358,7 @@ export function MultiSelectField(
 ) {
   return function (target: object, propertyName: string) {
     if (config.defaultConstraints !== false) {
-      registerStringValidator(target, propertyName, config)
+      registerStringValidator(target, propertyName, config, true)
 
       const values = unref(config.options).map(({ value }) => value)
       IsIn(values, { each: true })(target, propertyName)
